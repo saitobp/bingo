@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bingo
 
-## Getting Started
+A collection of general-purpose tools for playing bingo — currently featuring a live number-draw display that shows the current ball and keeps a running history of the session. Built with React, Next.js, Tailwind CSS, and shadcn/ui.
 
-First, run the development server:
+The app runs entirely client-side (no server or database required), but is structured to support extra features on top of that foundation as more tools are added.
+
+## Running the app
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # production build
+npm run start   # run the production build
+npm run lint    # lint the project
+```
 
-## Learn More
+## Using the app
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Type a number between 1 and 75 and submit to draw it — the ball updates with the matching B-I-N-G-O letter and color.
+- Drawing the same number twice shows a warning instead of duplicating it.
+- The last 10 draws are listed below the ball, most recent first.
+- Click **"Mostrar todos"** to open the full history of every number drawn so far.
