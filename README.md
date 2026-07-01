@@ -16,11 +16,22 @@ Then open [http://localhost:3000](http://localhost:3000).
 Other scripts:
 
 ```bash
-npm run build   # production build
-npm run start   # run the production build
-npm run lint    # lint the project
-npm test        # run tests
+npm run build      # production build
+npm run start      # run the production build
+npm run lint       # lint the project
+npm run typecheck  # type-check the project
+npm test           # run tests
 ```
+
+## Pre-commit hook
+
+Husky runs a pre-commit hook on every `git commit`. It runs, in order:
+
+1. `lint-staged` — lints and formats staged files (ESLint with `--fix`, then Prettier)
+2. `npm run typecheck` — type-checks the project
+3. `npm test -- --run` — runs the test suite
+
+The commit is blocked if any step fails. The hook is installed automatically via `npm install` (through the `prepare` script).
 
 ## Using the app
 
