@@ -75,7 +75,7 @@ export default function HomePage() {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const recentDraws = useMemo(() => drawHistory.slice(0, 10), [drawHistory]);
+  const recentDraws = useMemo(() => drawHistory.slice(0, 5), [drawHistory]);
   const inputRef = useRef<HTMLInputElement>(null);
   const drawHistoryRef = useRef(drawHistory);
 
@@ -146,19 +146,19 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-4 py-12 text-blue-50">
+    <main className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 px-4 py-12 text-blue-50 h-full">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -inset-40 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_60%)] blur-3xl" />
         <div className="absolute inset-y-0 -left-32 w-80 bg-[radial-gradient(circle,_rgba(110,231,183,0.15),_transparent_55%)] blur-2xl" />
         <div className="absolute -bottom-48 right-0 h-96 w-96 bg-[radial-gradient(circle,_rgba(129,140,248,0.22),_transparent_60%)] blur-3xl" />
       </div>
 
-      <section className="flex w-full max-w-6xl flex-1 flex-col items-center justify-center gap-16">
-        <div className="flex w-full flex-col items-center gap-12 md:flex-row md:items-end md:justify-center md:gap-16">
+      <section className="flex w-full h-full max-w-6xl flex-1 flex-col items-center gap-8 md:flex-row md:items-center md:justify-center md:gap-12">
+        <div className="flex h-full max-h-[calc(100svh-8rem)] w-full flex-1 items-center justify-center">
           <motion.div
             key={currentDraw ?? "placeholder"}
             className={cn(
-              "relative flex size-[28rem] items-center justify-center rounded-full bg-gradient-to-br shadow-[0_20px_60px_-25px_rgba(59,130,246,0.6)] transition-colors ",
+              "relative flex aspect-square h-full w-full max-w-[calc(100svh-8rem)] items-center justify-center rounded-full bg-linear-to-br shadow-[0_20px_60px_-25px_rgba(59,130,246,0.6)] transition-colors ",
               band.glow,
               `bg-linear-to-br ${band.bg}`,
             )}
@@ -171,13 +171,14 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.div
-              className="absolute inset-3 rounded-full bg-gradient-to-t from-white/25 via-white/10 to-transparent"
+              className="absolute inset-3 rounded-full bg-linear-to-t from-white/25 via-white/10 to-transparent"
               animate={{
                 opacity: [0.35, 0.6, 0.4],
                 rotate: [0, 8, -6, 0],
               }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
+
             <div className="relative flex flex-col items-center justify-center gap-2 text-white drop-shadow-md">
               <span className="text-8xl text-center font-medium  text-white/80 -mb-8">
                 {band.letter || "BINGO"}
@@ -188,19 +189,8 @@ export default function HomePage() {
             </div>
           </motion.div>
         </div>
-      </section>
 
-      <section className="mt-16 w-full max-w-4xl">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.4em] text-blue-200/70">
-              Últimos 10 sorteios
-            </h2>
-            <span className="text-xs text-blue-200/50">
-              Mais recente para mais antigo
-            </span>
-          </div>
-
+        <div className="flex w-full flex-col gap-3 md:w-64 md:shrink-0">
           <Dialog
             onOpenChange={(open) => {
               if (!open) {
@@ -211,12 +201,12 @@ export default function HomePage() {
             <DialogTrigger asChild>
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-blue-100 transition hover:border-white/40 hover:text-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-200"
+                className="inline-flex items-center justify-center self-start rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-blue-100 transition hover:border-white/40 hover:text-white focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-blue-200 max-w-full w-full"
               >
                 Mostrar todos
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-8xl  border border-white/10 bg-slate-950/90 text-blue-50 backdrop-blur-xl">
+            <DialogContent className="max-w-6xl border border-white/10 bg-slate-950/90 text-blue-50 backdrop-blur-xl">
               <DialogHeader>
                 <DialogTitle className="text-lg font-semibold uppercase tracking-[0.3em] text-white">
                   Todos os sorteios
@@ -264,50 +254,51 @@ export default function HomePage() {
               )}
             </DialogContent>
           </Dialog>
-        </div>
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
-          {recentDraws.length === 0 ? (
-            <p className="py-6 text-center text-sm text-blue-200/60">
-              Nenhum sorteio ainda. Adicione o primeiro número para começar o
-              sorteio.
-            </p>
-          ) : (
-            <motion.ul
-              initial={false}
-              animate={{ opacity: 1 }}
-              className="grid gap-3 grid-cols-5"
-              layout
-            >
-              <AnimatePresence initial={false} mode="popLayout">
-                {recentDraws.slice(0, 10).map((draw) => {
-                  const token = getBandToken(draw);
-                  return (
-                    <motion.li
-                      key={draw}
-                      layout="position"
-                      initial={{ y: 12, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -12, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className={cn(
-                        "mt-3 flex items-center justify-between rounded-2xl bg-gradient-to-br px-4 py-3 text-white shadow-inner",
-                        token.glow,
-                        `bg-gradient-to-br ${token.bg}`,
-                      )}
-                    >
-                      <span className="text-4xl font-medium uppercase tracking-[0.4em] text-white/80">
-                        {token.letter}
-                      </span>
 
-                      <span className="text-6xl font-semibold tabular-nums">
-                        {formatDraw(draw)}
-                      </span>
-                    </motion.li>
-                  );
-                })}
-              </AnimatePresence>
-            </motion.ul>
-          )}
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
+            {recentDraws.length === 0 ? (
+              <p className="py-6 text-center text-sm text-blue-200/60">
+                Nenhum sorteio ainda. Adicione o primeiro número para começar o
+                sorteio.
+              </p>
+            ) : (
+              <motion.ul
+                initial={false}
+                animate={{ opacity: 1 }}
+                className="grid gap-3 grid-cols-1"
+                layout
+              >
+                <AnimatePresence initial={false} mode="popLayout">
+                  {recentDraws.map((draw) => {
+                    const token = getBandToken(draw);
+                    return (
+                      <motion.li
+                        key={draw}
+                        layout="position"
+                        initial={{ y: 12, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -12, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                        className={cn(
+                          "flex items-center justify-between rounded-2xl bg-gradient-to-br px-4 py-3 text-white shadow-inner",
+                          token.glow,
+                          `bg-gradient-to-br ${token.bg}`,
+                        )}
+                      >
+                        <span className="text-2xl font-medium uppercase tracking-[0.4em] text-white/80">
+                          {token.letter}
+                        </span>
+
+                        <span className="text-4xl font-semibold tabular-nums">
+                          {formatDraw(draw)}
+                        </span>
+                      </motion.li>
+                    );
+                  })}
+                </AnimatePresence>
+              </motion.ul>
+            )}
+          </div>
         </div>
       </section>
 
